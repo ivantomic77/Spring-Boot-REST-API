@@ -5,6 +5,8 @@ import java.util.List;
 import com.example.accessdatawjpa.exception.CustomerNotFoundException;
 import com.example.accessdatawjpa.model.Customer;
 import com.example.accessdatawjpa.repository.CustomerRepo;
+import com.example.accessdatawjpa.service.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,55 +14,45 @@ public class CustomerController {
 
     private final CustomerRepo repository;
 
+    @Autowired
+    CustomerService service;
+
     CustomerController(CustomerRepo repository) {
         this.repository = repository;
     }
 
     @GetMapping("/customers/s")
     List<Customer> allActive(@RequestParam(name = "active") Boolean active) {
-        return repository.findByActive(active);
+        return service.findAllActive(active);
     }
 
     // Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/customers")
     List<Customer> all() {
-        return repository.findAll();
+        return service.findAll();
     }
     // end::get-aggregate-root[]
 
     @PostMapping("/customersPost")
-    Customer newEmployee(@RequestBody Customer newCustomer) {
-        return repository.save(newCustomer);
+    Customer newCustomer(@RequestBody Customer newCustomer) {
+        return service.createCustomer(newCustomer);
     }
 
     // Single item
 
     @GetMapping("/customer/{id}")
     Customer one(@PathVariable Long id) {
-
-        return repository.findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException(id));
+        return service.findByID(id);
     }
 
     @PutMapping("/customer/{id}")
     Customer replaceEmployee(@RequestBody Customer newCustomer, @PathVariable Long id) {
-
-        return repository.findById(id)
-                .map(customer -> {
-                    customer.setFirstName(newCustomer.getFirstName());
-                    customer.setLastName(newCustomer.getLastName());
-                    customer.setActive(newCustomer.getActive());
-                    return repository.save(customer);
-                })
-                .orElseGet(() -> {
-                    newCustomer.setId(id);
-                    return repository.save(newCustomer);
-                });
+        return service.replaceCustomer(newCustomer,id);
     }
 
     @DeleteMapping("/customer/{id}")
     void deleteEmployee(@PathVariable Long id) {
-        repository.deleteById(id);
+        service.deleteCustomer(id);
     }
 }
