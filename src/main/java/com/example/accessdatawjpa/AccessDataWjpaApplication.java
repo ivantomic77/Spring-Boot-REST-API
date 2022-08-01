@@ -21,7 +21,7 @@ public class AccessDataWjpaApplication {
     public CommandLineRunner demo(CustomerRepo repository) {
         return (args) -> {
             // save a few customers
-            repository.save(new Customer("Jack", "Bauer",true));
+            /*repository.save(new Customer("Jack", "Bauer",true));
             repository.save(new Customer("Chloe", "O'Brian",false));
             repository.save(new Customer("Kim", "Bauer",true));
             repository.save(new Customer("David", "Palmer",false));
@@ -51,7 +51,7 @@ public class AccessDataWjpaApplication {
             // for (Customer bauer : repository.findByLastName("Bauer")) {
             //  log.info(bauer.toString());
             // }
-            log.info("");
+            log.info("");*/
         };
     }
 

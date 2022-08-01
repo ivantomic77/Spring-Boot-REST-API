@@ -1,13 +1,26 @@
 package com.example.accessdatawjpa.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import com.example.accessdatawjpa.exception.CustomerNotFoundException;
 import com.example.accessdatawjpa.model.Customer;
 import com.example.accessdatawjpa.repository.CustomerRepo;
 import com.example.accessdatawjpa.service.CustomerService;
+import com.sun.xml.bind.api.impl.NameConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class CustomerController {
@@ -34,25 +47,24 @@ public class CustomerController {
     }
     // end::get-aggregate-root[]
 
-    @PostMapping("/customersPost")
-    Customer newCustomer(@RequestBody Customer newCustomer) {
-        return service.createCustomer(newCustomer);
+    @PostMapping("/customer/new")
+    public Customer newCustomer(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,@RequestParam("active") Boolean active, @RequestParam("file") MultipartFile file) throws Exception{
+        return service.createCustomer(firstName,lastName,active,file);
     }
 
     // Single item
 
-    @GetMapping("/customer/{id}")
+    @GetMapping("/customer/get/{id}")
     Customer one(@PathVariable Long id) {
         return service.findByID(id);
     }
 
-    @PutMapping("/customer/{id}")
-    Customer replaceEmployee(@RequestBody Customer newCustomer, @PathVariable Long id) {
-        return service.replaceCustomer(newCustomer,id);
-    }
+    @PutMapping("/customer/put/{id}")
+    Customer replaceEmployee(@RequestBody Customer newCustomer, @PathVariable Long id) {return service.replaceCustomer(newCustomer,id);}
 
-    @DeleteMapping("/customer/{id}")
+    @DeleteMapping("/customer/delete/{id}")
     void deleteEmployee(@PathVariable Long id) {
         service.deleteCustomer(id);
     }
+
 }

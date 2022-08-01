@@ -5,8 +5,18 @@ import com.example.accessdatawjpa.model.Customer;
 import com.example.accessdatawjpa.repository.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Service
@@ -20,7 +30,14 @@ public class CustomerService {
 
     public List<Customer> findAll() {return repo.findAll();}
 
-    public Customer createCustomer(Customer newCustomer){return repo.save(newCustomer);}
+    public Customer createCustomer(String firstName,String lastName,Boolean active, MultipartFile file) throws IOException {
+        String pathDir = new ClassPathResource("static/files/").getFile().getAbsolutePath();
+        Files.copy(file.getInputStream(), Paths.get(pathDir+ File.separator+file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        System.out.println(fileName + " " + firstName);
+        Customer customer =  new Customer(firstName,lastName,active,pathDir,fileName, file.getContentType());
+        return repo.save(customer);
+    }
 
     public Customer findByID(Long id){return repo.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));}
 
