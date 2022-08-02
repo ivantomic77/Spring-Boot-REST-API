@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6ab052ed-847e-4ea6-868c-38ef5d800f32",
+		"_postman_id": "2dd4935e-c3f3-4723-81ef-45146032c237",
 		"name": "Customer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -9,7 +9,10 @@
 			"name": "GetAllCustomers",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": ""
+				}
 			},
 			"response": []
 		},
@@ -17,7 +20,10 @@
 			"name": "GetByID",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": ""
+				}
 			},
 			"response": []
 		},
@@ -103,7 +109,10 @@
 			"name": "GetActiveCustomers",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": ""
+				}
 			},
 			"response": []
 		}
