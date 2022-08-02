@@ -14,6 +14,7 @@ import com.example.accessdatawjpa.service.CustomerService;
 import com.sun.xml.bind.api.impl.NameConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,14 +35,12 @@ public class CustomerController {
         this.repository = repository;
     }
 
-    @GetMapping("/customers/s")
+    @GetMapping("/customer/active")
     List<Customer> allActive(@RequestParam(name = "active") Boolean active) {
         return service.findAllActive(active);
     }
 
-    // Aggregate root
-    // tag::get-aggregate-root[]
-    @GetMapping("/customers")
+    @GetMapping("/customer")
     List<Customer> all() {
         return service.findAll();
     }
@@ -50,6 +49,11 @@ public class CustomerController {
     @PostMapping("/customer/new")
     public Customer newCustomer(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,@RequestParam("active") Boolean active, @RequestParam("file") MultipartFile file) throws Exception{
         return service.createCustomer(firstName,lastName,active,file);
+    }
+
+    @GetMapping("customer/getFile/{id}")
+    public ResponseEntity downloadFileFromLocal(@PathVariable Long id){
+        return service.downloadFile(id);
     }
 
     // Single item

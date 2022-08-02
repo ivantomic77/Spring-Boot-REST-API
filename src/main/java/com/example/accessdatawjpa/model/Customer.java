@@ -12,25 +12,28 @@ import javax.persistence.*;
 @Getter
 @ToString
 public class Customer {
-
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private String firstName;
     private String lastName;
     private Boolean active;
-    private String path;
     private String fileName;
+    private String filePath;
     private String fileType;
+    @Lob
+    private byte[] file;
+
 
     public Customer() {}
 
-    public Customer(String firstName, String lastName, Boolean active, String path, String fileName, String fileType) {
+    public Customer(String firstName, String lastName, Boolean active, String fileName, String filePath, byte[] file, String fileType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.active = active;
-        this.path = path;
         this.fileName = fileName;
+        this.filePath = filePath;
+        this.file = file;
         this.fileType = fileType;
     }
 }
