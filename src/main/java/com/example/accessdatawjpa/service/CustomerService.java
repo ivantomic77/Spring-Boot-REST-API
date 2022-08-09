@@ -29,13 +29,15 @@ public class CustomerService {
     @Autowired
     CustomerRepo repo;
 
-    public List<Customer> findAllActive(boolean active){
+    public List<Customer> findAllActive(boolean active) {
         return repo.findByActive(active);
     }
 
-    public List<Customer> findAll() {return repo.findAll();}
+    public List<Customer> findAll() {
+        return repo.findAll();
+    }
 
-    public ResponseEntity downloadFile(Long id){
+    public ResponseEntity downloadFile(Long id) {
         Customer customer = findByID(id);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(customer.getFileType()))
@@ -43,12 +45,12 @@ public class CustomerService {
                 .body(customer.getFile());
     }
 
-    public Customer createCustomer(String firstName,String lastName,Boolean active, MultipartFile file) throws IOException {
+    public Customer createCustomer(String firstName, String lastName, Boolean active, MultipartFile file) throws IOException {
         String pathDir = new ClassPathResource("static/files/").getFile().getAbsolutePath();
-        Files.copy(file.getInputStream(), Paths.get(pathDir+ File.separator+file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(file.getInputStream(), Paths.get(pathDir + File.separator + file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
-        Customer customer =  new Customer();
+        Customer customer = new Customer();
         customer.setFirstName(firstName);
         customer.setLastName(lastName);
         customer.setFilePath(pathDir);
@@ -65,9 +67,11 @@ public class CustomerService {
         return repo.save(customer);
     }
 
-    public Customer findByID(Long id){return repo.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));}
+    public Customer findByID(Long id) {
+        return repo.findById(id).orElseThrow(() -> new CustomerNotFoundException(id));
+    }
 
-    public Customer replaceCustomer(Customer newCustomer, Long id){
+    public Customer replaceCustomer(Customer newCustomer, Long id) {
         return repo.findById(id)
                 .map(customer -> {
                     customer.setFirstName(newCustomer.getFirstName());
@@ -85,5 +89,7 @@ public class CustomerService {
                 });
     }
 
-    public void deleteCustomer(Long id){repo.deleteById(id);}
+    public void deleteCustomer(Long id) {
+        repo.deleteById(id);
+    }
 }

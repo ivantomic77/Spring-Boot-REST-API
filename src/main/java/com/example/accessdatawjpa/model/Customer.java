@@ -1,9 +1,9 @@
 package com.example.accessdatawjpa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
@@ -22,6 +22,7 @@ public class Customer {
     private String filePath;
     private String fileType;
     @Lob
+    @JsonIgnore
     private byte[] file;
 
 
