@@ -3,11 +3,13 @@ package com.example.accessdatawjpa.controller;
 import com.example.accessdatawjpa.model.Customer;
 import com.example.accessdatawjpa.repository.CustomerRepo;
 import com.example.accessdatawjpa.service.CustomerService;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -34,6 +36,7 @@ public class CustomerController {
     }
 
     @PostMapping("/customer/new")
+    @ResponseBody
     public Customer newCustomer(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,@RequestParam("active") Boolean active, @RequestParam("file") MultipartFile file) throws Exception{
         return service.createCustomer(firstName,lastName,active,file);
     }
@@ -50,7 +53,7 @@ public class CustomerController {
     }
 
     @PutMapping("/customer/put/{id}")
-    Customer replaceEmployee(@RequestBody Customer newCustomer, @PathVariable Long id) {return service.replaceCustomer(newCustomer,id);}
+    Customer replaceEmployee(@PathVariable Long id, @RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,@RequestParam("active") Boolean active, @RequestParam("file") MultipartFile file) throws IOException {return service.replaceCustomer(id, firstName, lastName,active, file);}
 
     @DeleteMapping("/customer/delete/{id}")
     void deleteEmployee(@PathVariable Long id) {

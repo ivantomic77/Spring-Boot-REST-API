@@ -1,6 +1,7 @@
 package com.example.accessdatawjpa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,6 +18,7 @@ public class Customer {
     private Long id;
     private String firstName;
     private String lastName;
+    @JsonProperty("active")
     private Boolean active;
     private String fileName;
     private String filePath;
