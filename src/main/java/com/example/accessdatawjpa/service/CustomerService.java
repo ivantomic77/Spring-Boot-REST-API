@@ -73,23 +73,31 @@ public class CustomerService {
     }
 
     public Customer replaceCustomer(Long id, String firstName, String lastName,Boolean active, MultipartFile file) throws IOException {
-        String pathDir = new ClassPathResource("static/files/").getFile().getAbsolutePath();
-        Files.copy(file.getInputStream(), Paths.get(pathDir + File.separator + file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String pathDirTemp = "";
+        String fileNameTemp = "";
+        if(file != null) {
+            pathDirTemp = new ClassPathResource("static/files/").getFile().getAbsolutePath();
+            Files.copy(file.getInputStream(), Paths.get(pathDirTemp + File.separator + file.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+            fileNameTemp = StringUtils.cleanPath(file.getOriginalFilename());
+        }
+        final String pathDir = pathDirTemp;
+        final String fileName = fileNameTemp;
         Customer newCustomer = new Customer();
         return repo.findById(id)
                 .map(customer -> {
                     customer.setFirstName(firstName);
                     customer.setLastName(lastName);
                     customer.setActive(active);
-                    try {
-                        customer.setFile(file.getBytes());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                    if(file != null) {
+                        try {
+                            customer.setFile(file.getBytes());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        customer.setFileName(fileName);
+                        customer.setFileType(file.getContentType());
+                        customer.setFilePath(pathDir);
                     }
-                    customer.setFileName(fileName);
-                    customer.setFileType(file.getContentType());
-                    customer.setFilePath(pathDir);
                     return repo.save(customer);
                 })
                 .orElseGet(() -> {
@@ -97,19 +105,24 @@ public class CustomerService {
                     newCustomer.setFirstName(firstName);
                     newCustomer.setLastName(lastName);
                     newCustomer.setActive(active);
-                    try {
-                        newCustomer.setFile(file.getBytes());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                    if(file != null) {
+                        try {
+                            newCustomer.setFile(file.getBytes());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        newCustomer.setFileName(fileName);
+                        newCustomer.setFileType(file.getContentType());
+                        newCustomer.setFilePath(pathDir);
                     }
-                    newCustomer.setFileName(fileName);
-                    newCustomer.setFileType(file.getContentType());
-                    newCustomer.setFilePath(pathDir);
                     return repo.save(newCustomer);
                 });
     }
 
     public void deleteCustomer(Long id) {
+        Customer customer = findByID(id);
+        File delFile = new File(customer.getFilePath() + '/' + customer.getFileName());
+        delFile.delete();
         repo.deleteById(id);
     }
 }
