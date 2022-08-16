@@ -53,7 +53,7 @@ public class CustomerController {
     }
 
     @PutMapping("/customer/put/{id}")
-    Customer replaceEmployee(@PathVariable Long id, @RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,@RequestParam("active") Boolean active, @RequestParam("file") MultipartFile file) throws IOException {return service.replaceCustomer(id, firstName, lastName,active, file);}
+    Customer replaceEmployee(@PathVariable Long id, @RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,@RequestParam("active") Boolean active, @RequestParam(name="file", required=false) MultipartFile file) throws IOException {return service.replaceCustomer(id, firstName, lastName,active, file);}
 
     @DeleteMapping("/customer/delete/{id}")
     void deleteEmployee(@PathVariable Long id) {
